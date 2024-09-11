@@ -48,17 +48,24 @@ const book = await Book.create({
     response.send({message: "success", book: book});
 });
 
-
-
 //GET ROUTE
-
-app.get("/books/allbooks", (request, response) => {
-        response.send({message: "success"});
-})
-app.get("/books", (request, response) => {
-
-    response.send({message: "success"});
+ 
+app.get("/books/getallbooks", async (request, response) => {
+    const books = await Book.find({});
+response.send({message: "success",allbooks: books});
 });
+
+
+
+//EXAMPLES
+
+// app.get("/books/allbooks", (request, response) => {
+//         response.send({message: "success"});
+// })
+// app.get("/books", (request, response) => {
+
+//     response.send({message: "success"});
+// });
 
 // POST ROUTE
 
