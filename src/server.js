@@ -1,42 +1,87 @@
+require("dotenv").config();
 const express = require("express");
-
+const mongoose = require("mongoose");
 const app = express();
-
 app.use(express.json());
 
-const fakeDB =[];
+console.log(process.env.MY_WORD);
 
-//GET ROUTE
+//DB connection
 
-app.get("/books/allbooks", (request, response) => {
-        response.send({message: "success",fakeDB: fakeDB});
-})
-app.get("/books", (request, response) => {
-const book = {
-    title: "book1",
-    author: "me",
-    genre: "horror",
-};
+const connection = async () => {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("DB is working")
+}
+
+connection();
+
+//Book model
+
+const bookSchema = new mongoose.Schema({
+    title:{
+        type: String,
+        required: true,
+        unique: true,        
+    },
+    author:{
+        type: String,
+        required: true,
+    },
+    genre:{
+        type: String,
+    },
+});
+
+const Book = mongoose.model("book", bookSchema);
+
+//Routes
+
+//posts route
+app.post("/books/addbook", async (request, response) => {
+    console.log("request.body: ", request.body.title)
+const book = await Book.create({
+   title: request.body.title,
+   author: request.body.author,
+   genre: request.body.genre,
+});
     response.send({message: "success", book: book});
 });
 
-//GET ALL THE BOOKS (i.e. fakeDB)
+//GET ROUTE
+app.get("/books/getallbooks", async (request, response) => {
+    const books = await Book.find({});
+response.send({message: "success",allbooks: books});
+});
 
-// app.get("/books/allbooks", (request, response) => {
-//     response.send({message: "success",fakeDB: fakeDB});
-// })
+//get by title
+app.put("/books/bookauthor", async (request,response) => {
+    const author = await Book.findOneAndUpdate({title: request.body.title}, {author: request.body.author});
+    response.send({message: "author updated", author: author});
+});
 
-// POST ROUTE
-
-app.post("/books",(request, response) => {
-  fakeDB.push(request.body);
-
-    response.send({message: `${request.body.title} has been added`});
+//Delete one book by title
+app.delete("/books/deletebookbytitle", async (request, response) => {
+    const deleteBook = await Book.deleteOne({bookName: request.body.bookName});
+    response.send({message: "Book deleted", deleteBook: deleteBook});
 });
 
 
+//EXAMPLES
 
-//DELETE ROUTE
+// app.get("/books/allbooks", (request, response) => {
+//         response.send({message: "success"});
+// })
+// app.get("/books", (request, response) => {
+
+//     response.send({message: "success"});
+// });
+
+// POST ROUTE
+
+// app.post("/books",(request, response) => {
+//     response.send({message: "success"});
+// });
+
 
 
 app.listen(5000, () => {
