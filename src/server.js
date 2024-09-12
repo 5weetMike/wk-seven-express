@@ -36,25 +36,34 @@ const Book = mongoose.model("book", bookSchema);
 
 //Routes
 
-//posts
+//posts route
 app.post("/books/addbook", async (request, response) => {
     console.log("request.body: ", request.body.title)
 const book = await Book.create({
    title: request.body.title,
    author: request.body.author,
-   genre: request.genre,
+   genre: request.body.genre,
 });
-
     response.send({message: "success", book: book});
 });
 
 //GET ROUTE
- 
 app.get("/books/getallbooks", async (request, response) => {
     const books = await Book.find({});
 response.send({message: "success",allbooks: books});
 });
 
+//get by title
+app.put("/books/bookauthor", async (request,response) => {
+    const author = await Book.findOneAndUpdate({title: request.body.title}, {author: request.body.author});
+    response.send({message: "author updated", author: author});
+});
+
+//Delete one book by title
+app.delete("/books/deletebookbytitle", async (request, response) => {
+    const deleteBook = await Book.deleteOne({bookName: request.body.bookName});
+    response.send({message: "Book deleted", deleteBook: deleteBook});
+});
 
 
 //EXAMPLES
