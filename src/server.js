@@ -4,31 +4,22 @@ const mongoose = require("mongoose");
 //new code below added
 const connection = require("./db/connection");
 const  Book = require("./books/model");
-
+const bookRouter = require("./books/routes")
 
 const app = express();
 app.use(express.json());
 
 connection();
 
-
-
+//needed for bookRouter to be used in server.js (e.i"app.use(___)")
+app.use(bookRouter);
 
 
 //Routes
 
-//posts route
-app.post("/books/addbook", async (request, response) => {
-    console.log("request.body: ", request.body.title)
-const book = await Book.create({
-   title: request.body.title,
-   author: request.body.author,
-   genre: request.body.genre,
-});
-    response.send({message: "success", book: book});
-});
 
-//GET ROUTE
+
+//GET Route
 app.get("/books/getallbooks", async (request, response) => {
     const books = await Book.find({});
 response.send({message: "success",allbooks: books});
