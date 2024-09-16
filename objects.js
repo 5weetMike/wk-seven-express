@@ -38,3 +38,22 @@ const theObj = {
 
 console.log(theObj)
 console.log(theObj.family[1])
+
+
+//dynamic Objects
+
+const militaryDoctrine = {
+    faction: "black templars",
+    rank: "high  marshal",
+    loyal: true,
+    factionSize: "1,000 marines"
+};
+
+//JS dynamic object keys
+
+const key1 = "car"
+const value1 = "toyota"
+
+const car = {
+    [key1]: value1
+}

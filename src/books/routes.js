@@ -2,8 +2,9 @@ const {Router} = require("express");
 const bookRouter = Router();
 const {addBook} = require("./controllers");
 const {getAllBooks} = require("./controllers");
-const {getByTitle} = require("./controllers")
-const {deleteBookByTitle} = require("./controllers")
+const {getByTitle} = require("./controllers");
+const {deleteBookByTitle} = require("./controllers");
+const {bookByTitle} = require("./controllers")
 
 //posts route  (replacing "app.___, with bookRouter.___" and moving the function code into controllers.js)
 bookRouter.post("/books/addbook", addBook);
@@ -16,6 +17,9 @@ bookRouter.put("/books/bookauthor", getByTitle);
 
 //Delete one book by title
 bookRouter.delete("/books/deletebookbytitle", deleteBookByTitle);
+
+//find one book by title
+bookRouter.get("/books/bookbytitle/:title", bookByTitle);
 
 
 
